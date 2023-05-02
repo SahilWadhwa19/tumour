@@ -232,13 +232,14 @@ print(type(masks_data))
 masks_data = np.asarray(masks_data)
 print(masks_data.shape)
 
-images_data = np.reshape(images_data, (len(images_data), image_size[0], image_size[1]))
+images_data = np.reshape(images_data, (len(images_data), image_size[0], image_size[1], 1))
 print(images_data.shape)
 print(type(images_data))
 
-masks_data = np.reshape(masks_data, (len(images_data), image_size[0], image_size[1]))
+masks_data = np.reshape(masks_data, (len(images_data), image_size[0], image_size[1], 1))
 print(masks_data.shape)
 print(type(masks_data))
+
 
 # When we need to do the training without ipus
 # tensorflow.keras.losses.SparseCategoricalCrossentropy()
@@ -261,7 +262,7 @@ class loggingCallback(keras.callbacks.Callback):
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
                   optimizer=tensorflow.keras.optimizers.Adam(),
                   metrics=["accuracy"])
-"""
+
 with mlflow.start_run(run_name="xray") as run:
     model.fit(x=images_data, y=masks_data, epochs=1, verbose=True, validation_split=0.1, callbacks=[loggingCallback()])
 
@@ -275,4 +276,4 @@ with mlflow.start_run(run_name="xray") as run:
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
 model.fit(images_data, masks_data, epochs = 1, batch_size = 1)
-
+"""
