@@ -118,12 +118,12 @@ def load_mask(filename ):
     
     return mask
   
-sample_image = load_img(input_images_paths[17772])
+sample_image = load_img(input_images_paths[160])
 # Converted PIL object into numpy array.
 sample_image = np.array(sample_image)
 print(sample_image.shape)
 
-sample_mask = load_mask(input_masks_paths[17772])
+sample_mask = load_mask(input_masks_paths[160])
 # Converted PIL object into numpy array.
 sample_mask = np.array(sample_mask)
 print(sample_mask.shape)
