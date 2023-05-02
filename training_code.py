@@ -25,8 +25,8 @@ def load_data_paths(data_path):
   
   
 
-image_path = "data/img/"
-mask_path = "data/seg"
+image_path = "/data/img/"
+mask_path = "/data/seg"
 
 input_images_paths = load_data_paths(image_path)
 input_masks_paths = load_data_paths(mask_path)
