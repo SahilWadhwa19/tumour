@@ -263,7 +263,7 @@ model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(),
                   metrics=["accuracy"])
 
 with mlflow.start_run(run_name="xray") as run:
-    model.fit(x=images_data_train, y=masks_data_train, epochs=1, verbose=True, validation_split=0.1, callbacks=[loggingCallback()])
+    model.fit(x=images_data, y=masks_data, epochs=1, verbose=True, validation_split=0.1, callbacks=[loggingCallback()])
 
     # Exporting model & metrics
     print("Model Save")
