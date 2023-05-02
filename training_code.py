@@ -1,6 +1,5 @@
 import os
 import io
-from tensorflow.python import ipu
 import numpy as np
 
 import warnings 
@@ -13,7 +12,6 @@ import tensorflow.keras
 from sklearn.preprocessing import label_binarize
 from tensorflow.keras import layers
 from tensorflow.keras.optimizers import Adam
-from tensorflow.python import ipu
 from sklearn.metrics import confusion_matrix as sk_confusion_matrix
 from sklearn.metrics import classification_report as sk_classification_report
 from sklearn.metrics import roc_curve, auc
@@ -149,60 +147,58 @@ def get_model(image_size, num_channels):
     inputs = tensorflow.keras.Input(shape=image_size + (num_channels,))
     
     ### [First half of the network: downsampling inputs] ###
-    with ipu.keras.PipelineStage(0):
-        # Entry block
-        x = layers.Conv2D(32, 3, strides=2, padding="same")(inputs)
+    # Entry block
+    x = layers.Conv2D(32, 3, strides=2, padding="same")(inputs)
 
-        x = layers.BatchNormalization()(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation("relu")(x)
+
+    previous_block_activation = x  # Set aside residual
+
+    # Blocks 1, 2, 3 are identical apart from the feature depth.
+    # for filters in [64, 128, 256]:
+    for filters in [64, 128, 256]:
         x = layers.Activation("relu")(x)
+        x = layers.SeparableConv2D(filters, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
 
-        previous_block_activation = x  # Set aside residual
+        x = layers.Activation("relu")(x)
+        x = layers.SeparableConv2D(filters, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
 
-        # Blocks 1, 2, 3 are identical apart from the feature depth.
-        # for filters in [64, 128, 256]:
-        for filters in [64, 128, 256]:
-            x = layers.Activation("relu")(x)
-            x = layers.SeparableConv2D(filters, 3, padding="same")(x)
-            x = layers.BatchNormalization()(x)
+        x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
 
-            x = layers.Activation("relu")(x)
-            x = layers.SeparableConv2D(filters, 3, padding="same")(x)
-            x = layers.BatchNormalization()(x)
-
-            x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
-
-                # Project residual
-            residual = layers.Conv2D(filters, 1, strides=2, padding="same")(
+        # Project residual
+        residual = layers.Conv2D(filters, 1, strides=2, padding="same")(
                     previous_block_activation
                 )
-            x = layers.add([x, residual])  # Add back residual
-            previous_block_activation = x  # Set aside next residual
+        x = layers.add([x, residual])  # Add back residual
+        previous_block_activation = x  # Set aside next residual
     
     ### [Second half of the network: upsampling inputs] ###
     # for filters in [256, 128, 64, 32]:
-    with ipu.keras.PipelineStage(1):
-        for filters in [256, 128, 64, 32]:
-            x = layers.Activation("relu")(x)
-            x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
-            x = layers.BatchNormalization()(x)
+    for filters in [256, 128, 64, 32]:
+        x = layers.Activation("relu")(x)
+        x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
 
-            x = layers.Activation("relu")(x)
-            x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
-            x = layers.BatchNormalization()(x)
+        x = layers.Activation("relu")(x)
+        x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
 
-            x = layers.UpSampling2D(2)(x)
+        x = layers.UpSampling2D(2)(x)
 
-            # Project residual
-            residual = layers.UpSampling2D(2)(previous_block_activation)
-            residual = layers.Conv2D(filters, 1, padding="same")(residual)
-            x = layers.add([x, residual])  # Add back residual
-            previous_block_activation = x  # Set aside next residual
+        # Project residual
+        residual = layers.UpSampling2D(2)(previous_block_activation)
+        residual = layers.Conv2D(filters, 1, padding="same")(residual)
+        x = layers.add([x, residual])  # Add back residual
+        previous_block_activation = x  # Set aside next residual
             
-            # Add a per-pixel classification layer
-        outputs = layers.Conv2D(3, 3, activation="softmax", padding="same")(x)
+        # Add a per-pixel classification layer
+    outputs = layers.Conv2D(3, 3, activation="softmax", padding="same")(x)
 
-            # Define the model
-        model = tensorflow.keras.Model(inputs, outputs)
+        # Define the model
+    model = tensorflow.keras.Model(inputs, outputs)
         
     return model
 
