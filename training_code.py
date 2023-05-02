@@ -16,7 +16,7 @@ from sklearn.metrics import confusion_matrix as sk_confusion_matrix
 from sklearn.metrics import classification_report as sk_classification_report
 from sklearn.metrics import roc_curve, auc
 import itertools
-
+from tensorflow import keras
 def load_data_paths(data_path):
     
     input_paths = sorted([os.path.join(data_path, file_name) for file_name in os.listdir(data_path)
