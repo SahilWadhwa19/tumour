@@ -261,7 +261,7 @@ class loggingCallback(keras.callbacks.Callback):
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
                   optimizer=tensorflow.keras.optimizers.Adam(),
                   metrics=["accuracy"])
-
+"""
 with mlflow.start_run(run_name="xray") as run:
     model.fit(x=images_data, y=masks_data, epochs=1, verbose=True, validation_split=0.1, callbacks=[loggingCallback()])
 
@@ -273,5 +273,6 @@ with mlflow.start_run(run_name="xray") as run:
     mlflow.log_artifacts(OUTPUT_MODEL_DIR)
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
-# hist = model.fit(images_data_train, masks_data_train, epochs = 1, batch_size = batch_size, steps_per_epoch = steps_per_epoch)
+    """
+model.fit(images_data, masks_data, epochs = 1, batch_size = 1)
 
