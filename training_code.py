@@ -277,3 +277,4 @@ with mlflow.start_run(run_name="xray") as run:
     """
 model.fit(images_data, masks_data, epochs = 1, batch_size = 1)
 
+print("TrainGen: Training completed")
