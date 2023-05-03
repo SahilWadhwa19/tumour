@@ -262,7 +262,7 @@ class loggingCallback(keras.callbacks.Callback):
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
                   optimizer=tensorflow.keras.optimizers.Adam(),
                   metrics=["accuracy"])
-
+"""
 with mlflow.start_run(run_name="tumour") as run:
     model.fit(x=images_data, y=masks_data, epochs=1, verbose=True, validation_split=0.1, callbacks=[loggingCallback()])
 
@@ -274,7 +274,9 @@ with mlflow.start_run(run_name="tumour") as run:
     mlflow.log_artifacts(OUTPUT_MODEL_DIR)
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
-    
-# model.fit(images_data, masks_data, epochs = 1, batch_size = 1)
-
+    """
+model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1, callbacks=[loggingCallback()])
+# Exporting model & metrics
+print("Model Save")
+model.save("/model/1")
 print("TrainGen: Training completed")
