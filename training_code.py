@@ -275,7 +275,8 @@ with mlflow.start_run(run_name="tumour") as run:
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
-model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1, callbacks=[loggingCallback()])
+model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1)
+# , callbacks=[loggingCallback()]
 # Exporting model & metrics
 print("Model Save")
 model.save("/model/1")
