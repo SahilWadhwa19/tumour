@@ -268,7 +268,7 @@ class loggingCallback(keras.callbacks.Callback):
         cm_display.plot()
         plt.show()
         plt.savefig("confusion_matrix.png")
-        mlflow.artifact("confusion_matrix.png")
+        mlflow.log_artifact("confusion_matrix.png")
     
                     
     """
