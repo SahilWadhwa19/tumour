@@ -203,7 +203,7 @@ def get_model(image_size, num_channels):
     return model
 
 model = get_model(image_size, num_channels)
-model.summary()
+# model.summary()
 
 images_data = []
 
@@ -279,9 +279,11 @@ with mlflow.start_run(run_name="tumour") as run:
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
-model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1, callbacks=[loggingCallback()])
+model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1)
+# , callbacks=[loggingCallback()]
 print("Data type is ", images_data.dtype)
 images_data = np.float32(images_data)
+"""
 y_pred = model.predict(images_data)
 y_test = mask_data
 print("ConfMat y_test ",y_test.shape, y_test.dtype)
@@ -297,7 +299,8 @@ assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
 assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
 cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
 print(cnf_matrix)        
-        
+"""
+
 # , callbacks=[loggingCallback()]
 # Exporting model & metrics
 print("Model Save")
