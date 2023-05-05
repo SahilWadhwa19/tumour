@@ -287,6 +287,7 @@ images_data = np.float32(images_data)
 y_pred = model.predict(images_data)
 y_pred = np.argmax(y_pred, axis = -1)
 y_test = masks_data
+y_test = np.reshape(masks_data, (len(images_data), image_size[0], image_size[1]))
 print("ConfMat y_test ",y_test.shape, y_test.dtype)
 print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
 assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
