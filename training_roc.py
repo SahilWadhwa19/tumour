@@ -261,15 +261,15 @@ class loggingCallback(keras.callbacks.Callback):
         print(f"accuracy={round(logs['accuracy'],2)}")
         print(f"val_accuracy={round(logs['val_accuracy'],2)}")
     
-    actual = numpy.random_binomial(1.0.9, size = 1000)
-    predicted = numpy.random_binomial(1.0.9, size = 1000)
-    from sklearn import metrics
-    confusion_matrix = metrics.confusion_matrix(actual, predicted)
-    cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_label = [True, False])
-    cm_display.plot()
-    plt.show()
-    plt.savefig("confusion_matrix.png")
-    mlflow.artifact("confusion_matrix.png")
+        actual = numpy.random_binomial(1.0.9, size = 1000)
+        predicted = numpy.random_binomial(1.0.9, size = 1000)
+        from sklearn import metrics
+        confusion_matrix = metrics.confusion_matrix(actual, predicted)
+        cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_label = [True, False])
+        cm_display.plot()
+        plt.show()
+        plt.savefig("confusion_matrix.png")
+        mlflow.artifact("confusion_matrix.png")
     
                     
     """
