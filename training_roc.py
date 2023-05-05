@@ -264,7 +264,7 @@ class loggingCallback(keras.callbacks.Callback):
         predicted = np.random.binomial(1,0.9, size = 1000)
         from sklearn import metrics
         confusion_matrix = metrics.confusion_matrix(actual, predicted)
-        cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_label = [True, False])
+        cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [True, False])
         cm_display.plot()
         plt.show()
         plt.savefig("confusion_matrix.png")
