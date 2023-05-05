@@ -270,7 +270,7 @@ class loggingCallback(keras.callbacks.Callback):
         plt.savefig("confusion_matrix.png")
         mlflow.log_artifact("confusion_matrix.png")
         from sklearn.metrics import classification_report
-        cr = classification_report(actual, predict, output_dict = True)
+        cr = classification_report(actual, predicted, output_dict = True)
         f1_score = cr["1"][f1-score]
         
         
