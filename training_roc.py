@@ -260,7 +260,66 @@ class loggingCallback(keras.callbacks.Callback):
         print(f"val_loss={round(logs['val_loss'],2)}")
         print(f"accuracy={round(logs['accuracy'],2)}")
         print(f"val_accuracy={round(logs['val_accuracy'],2)}")
-        
+    
+    actual = numpy.random_binomial(1.0.9, size = 1000)
+    predicted = numpy.random_binomial(1.0.9, size = 1000)
+    from sklearn import metrics
+    confusion_matrix = metrics.confusion_matrix(actual, predicted)
+    cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_label = [True, False])
+    cm_display.plot()
+    plt.show()
+    plt.savefig("confusion_matrix.png")
+    mlflow.artifact("confusion_matrix.png")
+    
+                    
+    """
+    from sklearn import svm, datasets
+    from sklearn.model_selection import train_test_split
+    from sklearn.multiclass import OneVsRestClassifier
+
+    # imports renamed for metrics
+    # ---------------------------
+    #from sklearn.metrics import roc_curve as sk_roc_curve
+    #from sklearn.metrics import auc as sk_auc
+
+    # used for categorising data
+    # --------------------------
+    from sklearn.preprocessing import label_binarize as sk_label_binarize
+
+    from BM_Digit_ROC import roc_curve as sk_roc_curve
+    from BM_Digit_ROC import auc as sk_auc
+    from sklearn.metrics import roc_auc_score as sk_roc_auc_score
+
+    from sklearn.metrics import f1_score as sk_f1_scrore
+    from sklearn.metrics import precision_recall_curve  as sk_precision_recall_curve
+    from sklearn.metrics import average_precision_score as sk_average_precision_score
+
+    from scipy.special import softmax
+    num_classes=3, 
+    # categorise data
+    classes=[0, 1, 2],
+    plot_ids=[2,1,0]
+    figsize=(8,8)
+    colors = ["black", "grey", "blue","lightgreen","darkgreen"]
+    line_widths = [1,2,3,2,2]
+    line_styles=['dotted',"solid","solid","dashed","dashed"]
+    xlim =(0.0, 1.02)
+    ylim =(0.0, 1.02)
+    xlabel="False Positive Rate := 1-Sensitivity"
+    ylabel="True Positive Rate := Specifity"
+    legend_loc="lower center"
+    class_names=["Non-target   ", 
+                          "Target-organ ", 
+                          "Tumour region",
+                          "MICRO avg    ",
+                          "MACRO avg    "]
+
+    avg_line_widths = [1,2,3,2,2]
+    avg_line_styles=['dotted','dashed',"dashed","solid","solid"]
+    fig_title="ROC curves for classes & avg"
+    """
+
+
         
         
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
@@ -279,7 +338,7 @@ with mlflow.start_run(run_name="tumour") as run:
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
-model.fit(images_data, masks_data, epochs = 1, batch_size = 1, validation_split=0.1, callbacks=[loggingCallback()])
+model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback()])
 # 
 print("Data type is ", images_data.dtype)
 images_data = np.float32(images_data)
