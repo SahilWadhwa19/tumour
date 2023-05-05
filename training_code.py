@@ -260,20 +260,7 @@ class loggingCallback(keras.callbacks.Callback):
         print(f"val_loss={round(logs['val_loss'],2)}")
         print(f"accuracy={round(logs['accuracy'],2)}")
         print(f"val_accuracy={round(logs['val_accuracy'],2)}")
-        y_pred = model.predict(images_data)
-        y_test = mask_data
-        print("ConfMat y_test ",y_test.shape, y_test.dtype)
-        print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
-        assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
         
-        # ravel data to 1dim arrays
-        y_test = y_test.ravel()
-        y_pred = y_pred.ravel()
-        print("y_test, y_pred ", np.asarray(y_test).shape, np.asarray(y_pred).shape)
-        assert np.asarray(y_test).shape == np.asarray(y_pred).shape, "Mismatch y_test.shape vs y_pred.shape"
-        assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
-        assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
-        cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
         
         
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
@@ -293,6 +280,22 @@ with mlflow.start_run(run_name="tumour") as run:
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
 model.fit(images_data, masks_data, epochs = 4, batch_size = 1, validation_split=0.1, callbacks=[loggingCallback()])
+y_pred = model.predict(images_data)
+y_test = mask_data
+print("ConfMat y_test ",y_test.shape, y_test.dtype)
+print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
+assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
+        
+# ravel data to 1dim arrays
+y_test = y_test.ravel()
+y_pred = y_pred.ravel()
+print("y_test, y_pred ", np.asarray(y_test).shape, np.asarray(y_pred).shape)
+assert np.asarray(y_test).shape == np.asarray(y_pred).shape, "Mismatch y_test.shape vs y_pred.shape"
+assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
+assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
+cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
+print(cnf_matrix)        
+        
 # , callbacks=[loggingCallback()]
 # Exporting model & metrics
 print("Model Save")
