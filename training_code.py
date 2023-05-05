@@ -245,6 +245,8 @@ print(type(masks_data))
 # tensorflow.keras.losses.SparseCategoricalCrossentropy()
 # Train the model.
 
+from sklearn.metrics import confusion_matrix as sk_confusion_matrix
+from sklearn.metrics import roc_auc_score as sk_roc_auc_score
 
 # MLFlow metric logging function
 class loggingCallback(keras.callbacks.Callback):
@@ -258,6 +260,21 @@ class loggingCallback(keras.callbacks.Callback):
         print(f"val_loss={round(logs['val_loss'],2)}")
         print(f"accuracy={round(logs['accuracy'],2)}")
         print(f"val_accuracy={round(logs['val_accuracy'],2)}")
+        y_pred = model.predict(images_data)
+        y_test = mask_data
+        print("ConfMat y_test ",y_test.shape, y_test.dtype)
+        print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
+        assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
+        
+        # ravel data to 1dim arrays
+        y_test = y_test.ravel()
+        y_pred = y_pred.ravel()
+        print("y_test, y_pred ", np.asarray(y_test).shape, np.asarray(y_pred).shape)
+        assert np.asarray(y_test).shape == np.asarray(y_pred).shape, "Mismatch y_test.shape vs y_pred.shape"
+        assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
+        assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
+        cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
+        
         
 model.compile(loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(), 
                   optimizer=tensorflow.keras.optimizers.Adam(),
