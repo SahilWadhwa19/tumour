@@ -1,6 +1,6 @@
 # Load the TensorBoard notebook extension
 print("installing")
-!pip install tensorboard
+# !pip install tensorboard
 print("Loading")
 import tensorboard
 print("loaded")
