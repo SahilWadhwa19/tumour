@@ -339,7 +339,7 @@ with mlflow.start_run(run_name="tumour") as run:
     """
 DKUBE_TENSORBOARD_DIR = "/model/tensorboard"
 model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback(),
-      tf.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
+      tensorflow.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
 # 
 print("Data type is ", images_data.dtype)
 images_data = np.float32(images_data)
