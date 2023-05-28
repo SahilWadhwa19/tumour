@@ -338,33 +338,32 @@ with mlflow.start_run(run_name="tumour") as run:
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
 DKUBE_TENSORBOARD_DIR = "/model/tensorboard"
-model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback()])
-          # ,tensorflow.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
+with mlflow.start_run(run_name="tumour") as run:
+    model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback()])
+              # ,tensorflow.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
 
-print("Data type is ", images_data.dtype)
-images_data = np.float32(images_data)
+    print("Data type is ", images_data.dtype)
+    images_data = np.float32(images_data)
 
-y_pred = model.predict(images_data)
-y_pred = np.argmax(y_pred, axis = -1)
-y_test = masks_data
-y_test = np.reshape(masks_data, (len(images_data), image_size[0], image_size[1]))
-print("ConfMat y_test ",y_test.shape, y_test.dtype)
-print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
-assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
-        
-# ravel data to 1dim arrays
-y_test = y_test.ravel()
-y_pred = y_pred.ravel()
-print("y_test, y_pred ", np.asarray(y_test).shape, np.asarray(y_pred).shape)
-assert np.asarray(y_test).shape == np.asarray(y_pred).shape, "Mismatch y_test.shape vs y_pred.shape"
-assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
-assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
-cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
-print(cnf_matrix)        
+    y_pred = model.predict(images_data)
+    y_pred = np.argmax(y_pred, axis = -1)
+    y_test = masks_data
+    y_test = np.reshape(masks_data, (len(images_data), image_size[0], image_size[1]))
+    print("ConfMat y_test ",y_test.shape, y_test.dtype)
+    print("ConfMat y_pred ",y_pred.shape, y_pred.dtype)
+    assert y_test.shape == y_pred.shape, "Mismatch y_test.shape == y_pred.shape"
 
+    # ravel data to 1dim arrays
+    y_test = y_test.ravel()
+    y_pred = y_pred.ravel()
+    print("y_test, y_pred ", np.asarray(y_test).shape, np.asarray(y_pred).shape)
+    assert np.asarray(y_test).shape == np.asarray(y_pred).shape, "Mismatch y_test.shape vs y_pred.shape"
+    assert len(y_test.shape)==1, "Mismatch len(y_test.shape)==1"
+    assert len(y_pred.shape)==1, "Mismatch len(y_pred.shape)==1"
+    cnf_matrix = (sk_confusion_matrix(y_test, y_pred))
+    print(cnf_matrix)        
 
-# , callbacks=[loggingCallback()]
-# Exporting model & metrics
-print("Model Save")
-model.save("/model/1")
-print("TrainGen: Training completed")
+    # Exporting model & metrics
+    print("Model Save")
+    model.save("/model/1")
+    print("TrainGen: Training completed")
