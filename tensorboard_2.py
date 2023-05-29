@@ -306,7 +306,7 @@ with mlflow.start_run(run_name="tumour") as run:
     print("Log Model")
     mlflow.keras.log_model(keras_model=model, artifact_path=None)
     """
-with mlflow.start_run(run_name="tumour") as run:
+with mlflow.start_run(run_name="tumour_1") as run:
     model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback()])
 
     print("Data type is ", images_data.dtype)
