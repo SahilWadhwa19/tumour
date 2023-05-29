@@ -248,6 +248,20 @@ print(type(masks_data))
 from sklearn.metrics import confusion_matrix as sk_confusion_matrix
 from sklearn.metrics import roc_auc_score as sk_roc_auc_score
 
+# Set up MLFlow Experiment
+MLFLOW_EXPERIMENT_NAME = os.getenv('DKUBE_PROJECT_NAME')
+
+if MLFLOW_EXPERIMENT_NAME:
+    exp = mlflow.get_experiment_by_name(MLFLOW_EXPERIMENT_NAME)
+    if not exp:
+        print("Creating experiment...")
+        mlflow.create_experiment(MLFLOW_EXPERIMENT_NAME)
+    mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT_NAME)
+
+# Output directory for MLFlow
+OUTPUT_MODEL_DIR = os.getcwd()+"/model_mlflow"
+os.makedirs(OUTPUT_MODEL_DIR, exist_ok=True)
+
 # MLFlow metric logging function
 class loggingCallback(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
@@ -271,52 +285,7 @@ class loggingCallback(keras.callbacks.Callback):
         mlflow.log_artifact("confusion_matrix.png")
     
                     
-    """
-    from sklearn import svm, datasets
-    from sklearn.model_selection import train_test_split
-    from sklearn.multiclass import OneVsRestClassifier
-
-    # imports renamed for metrics
-    # ---------------------------
-    #from sklearn.metrics import roc_curve as sk_roc_curve
-    #from sklearn.metrics import auc as sk_auc
-
-    # used for categorising data
-    # --------------------------
-    from sklearn.preprocessing import label_binarize as sk_label_binarize
-
-    from BM_Digit_ROC import roc_curve as sk_roc_curve
-    from BM_Digit_ROC import auc as sk_auc
-    from sklearn.metrics import roc_auc_score as sk_roc_auc_score
-
-    from sklearn.metrics import f1_score as sk_f1_scrore
-    from sklearn.metrics import precision_recall_curve  as sk_precision_recall_curve
-    from sklearn.metrics import average_precision_score as sk_average_precision_score
-
-    from scipy.special import softmax
-    num_classes=3, 
-    # categorise data
-    classes=[0, 1, 2],
-    plot_ids=[2,1,0]
-    figsize=(8,8)
-    colors = ["black", "grey", "blue","lightgreen","darkgreen"]
-    line_widths = [1,2,3,2,2]
-    line_styles=['dotted',"solid","solid","dashed","dashed"]
-    xlim =(0.0, 1.02)
-    ylim =(0.0, 1.02)
-    xlabel="False Positive Rate := 1-Sensitivity"
-    ylabel="True Positive Rate := Specifity"
-    legend_loc="lower center"
-    class_names=["Non-target   ", 
-                          "Target-organ ", 
-                          "Tumour region",
-                          "MICRO avg    ",
-                          "MACRO avg    "]
-
-    avg_line_widths = [1,2,3,2,2]
-    avg_line_styles=['dotted','dashed',"dashed","solid","solid"]
-    fig_title="ROC curves for classes & avg"
-    """
+    
 
 
         
@@ -339,8 +308,7 @@ with mlflow.start_run(run_name="tumour") as run:
     """
 DKUBE_TENSORBOARD_DIR = "/model/tensorboard"
 with mlflow.start_run(run_name="tumour") as run:
-    model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback()])
-              # ,tensorflow.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
+    model.fit(images_data, masks_data, epochs = 1, batch_size = 2, validation_split=0.1, callbacks=[loggingCallback(),tensorflow.keras.callbacks.TensorBoard(log_dir=DKUBE_TENSORBOARD_DIR)])
 
     print("Data type is ", images_data.dtype)
     images_data = np.float32(images_data)
