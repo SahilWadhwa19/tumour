@@ -1,0 +1,32 @@
+{
+	"LIVER_PATH":		"/media/BostonNFSAdele/BostonMedicalData/LiverTumor_B001",
+	"DATA_PATH":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/train/train_raw",
+	"SLICE_PATH":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/slices_raw",
+	"VOL_DIR":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/slices/train_aug",
+	"IMG_DIR_1":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/slices_raw/img",
+	"MASK_DIR_1":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/slices_raw/seg",
+	"IMG_DIR_4":		"/media/BostonNFS/BostonMedicalData/LiverTumor_A001/slices/img",
+	"MASK_DIR_4":		"/media/BostonNFS/BostonMedicalData/LiverTumor_A001/slices/seg",
+	"IMG_DIR":		"/media/BostonNFSAdele/BostonMedicalData/LiverTumorFull_B001/slices/img",
+	"MASK_DIR":		"/media/BostonNFSAdele/BostonMedicalData/LiverTumorFull_B001/slices/seg",
+	"IMG_DIR_2":		"/media/BostonNFS/BostonMedicalMedDare/digit/converted_results/liver metastases 2 - PKCK0718/slices/img",
+	"MASK_DIR_2":		"/media/BostonNFS/BostonMedicalMedDare/digit/converted_results/liver metastases 2 - PKCK0718/slices/seg",
+	"ROTATE_DIR":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/slices_rot",
+	
+	"RESULT_DIR_1":		"/media/BostonNFS/BostonMedicalData/LiverTumor_B001/pred",
+	
+	"RESULT_DIR":		"/media/BostonNFS/BostonMedicalMedDare/digit/converted_results/liver metastases 2 - PKCK0718/slices/predictions",
+    "IMG_SIZE": 	[512,512],
+    "NUM_CHANNELS": 1,
+    "NUM_CLASSES":  3,
+    "EPOCHS":		9,
+    "BATCH_SIZE":   32,
+    "MAX_SAMPLES":  19073,
+    "xMAX_SAMPLES":  19073,
+    "TEST_SPLIT_RATIO": 0.2,
+    
+    "MODELNAME":	"UNet_OxLiver"		
+	
+	
+	
+}

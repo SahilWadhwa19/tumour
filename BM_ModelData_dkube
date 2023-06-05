@@ -1,0 +1,295 @@
+'''
+Created on 31.01.2021
+
+@author: DIGIT
+'''
+import os
+import numpy as np
+import random
+from random import sample
+import time
+
+import logging
+# Init logging
+format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+
+# Own imports
+# -----------
+from BM_DataPaths import BM_DataPaths
+from BM_DataGen import BM_DataGen
+from BM_CheckPaths import check_paths_synch
+
+class BM_ModelData(object):
+    def __init__(self, 
+                 # data paths
+                 img_dir=None,
+                 mask_dir = None, 
+                 #training
+                 batch_size = 32, 
+                 # input data
+                 img_size = (160, 160), 
+                 num_channels=3, 
+                 num_slices=0, #DIGIT not used in orginal DataGen
+                 # max number of samples or None for all
+                 max_samples = None,
+                 # shuffle data
+                 shuffle=True,
+                 # number of test samples
+                 test_split_ratio = 0.2,
+                 # Data augmentation
+                 data_augment=False):
+        
+        # data paths
+        # ----------
+        self.img_dir  = img_dir
+        self.mask_dir = mask_dir
+        
+        
+        if not os.path.isdir(self.img_dir):
+            raise ValueError("Image Dir does not exist ",self.img_dir)
+        
+        if not os.path.isdir(self.mask_dir):
+            raise ValueError("Mask Dir does not exist ",self.mask_dir)
+        
+        
+        # training
+        self.batch_size = batch_size
+        
+        # input data
+        self.img_size = img_size
+        self.num_channels = num_channels
+        self.num_slices = num_slices
+        # max_samples
+        self.max_samples = max_samples
+        
+        # shuffle data
+        self.shuffle=shuffle
+        
+        # test split ratio, e.g. 0.2
+        if test_split_ratio > 1.0:
+            raise ValueError("test_split_ratio must be lower than 1.00 ",test_split_ratio)
+        self.test_split_ratio = test_split_ratio
+        
+        # Data augmentation
+        self.data_augment=data_augment
+        
+        if self.data_augment:
+            logging.info("*"*80)
+            logging.info("Data augmentation used")
+            logging.info("*"*80)
+        
+        # get all data paths for imgs and masks
+        # -------------------------------------
+        self.img_paths  = BM_DataPaths(data_path=self.img_dir ).load_data_paths()
+        self.mask_paths = BM_DataPaths(data_path=self.mask_dir).load_data_paths()
+ 
+        if len(self.img_paths) != len(self.mask_paths):
+            raise ValueError("Size mismatch img & mask files ")
+
+        assert check_paths_synch(self.img_paths, self.mask_paths)
+
+        
+    def get_data_paths(self, img_dir=None, mask_dir=None): 
+        img_dir  = self.img_dir  if img_dir  is None else img_dir
+        mask_dir = self.mask_dir if mask_dir is None else mask_dir
+        
+        # get all data paths for imgs and masks
+        # -------------------------------------
+        img_paths  = BM_DataPaths(data_path=img_dir ).load_data_paths()
+        mask_paths = BM_DataPaths(data_path=mask_dir).load_data_paths() 
+        return img_paths, mask_paths  
+        
+    
+    def get_data(self, max_samples=None, max_val_samples=32, random_seed=False, verbose=False):
+    
+        max_samples = self.max_samples if max_samples is None else max_samples
+        if max_samples is None:
+            max_samples = np.iinfo(np.uint32).max
+        
+        # Split our img paths into a training and a validation set
+        if random_seed:
+            seed = random.seed(time.time())
+        else:    
+            seed = 1337
+        # use constant seed for reproducability
+        
+        '''
+        @Digit: This will be the way to do it in general
+        # ----------------------------------------------
+        (1) Shuffle
+        (2) Take last for test
+        '''
+        
+        #===============================================================================
+        # MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO 
+        # random.Random(seed).shuffle does not return anything but shuffles the argument       
+        # MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO MEMO 
+        #===============================================================================
+        if self.shuffle:
+            logging.info("Shuffle input data")
+            random.Random(seed).shuffle(self.img_paths)
+            random.Random(seed).shuffle(self.mask_paths)
+        
+        if verbose:
+            for idx in range(10):
+                print("path sorted ",idx, os.path.basename(self.img_paths[idx]), os.path.basename(self.mask_paths[idx]))
+        
+        
+        # Number of images and masks; check
+        # ---------------------------------
+        num_img  = len(self.img_paths)
+        num_mask = len(self.mask_paths)
+        
+        if len(self.img_paths) != len(self.mask_paths):
+            raise ValueError("Size mismatch img & mask files ")
+        
+        num_train = min(max_samples, int(num_mask*(1.0-self.test_split_ratio)))
+        num_test  = int(num_train*self.test_split_ratio)
+        logging.info("Split data in %d train and %d test "%(num_train, num_test))
+        
+        # check
+        # -----
+        print("num_train ",num_train)
+        print("num_test  ",num_test)
+        print("num_total ",num_img)
+        #assert num_train + num_test == num_img, "Mismatch num_train+num_test vs num_img"
+        
+        # all items but not the last val_samples
+        train_img_paths  = self.img_paths [:+num_train]
+        train_mask_paths = self.mask_paths[:+num_train]
+        
+        logging.info("Check paths of masks and images")
+        assert len(train_img_paths) == len(train_mask_paths), "Mismatch len train_paths"
+        assert check_paths_synch(train_img_paths, train_mask_paths), "Mismatch train checkpaths"
+
+        if verbose:
+            for idx in range(10):
+                print("DataGen paths ",idx, os.path.basename(self.img_paths[idx]), os.path.basename(self.mask_paths[idx]))
+       
+        # test_samples last items
+        test_img_paths  = self.img_paths [-num_test:]
+        test_mask_paths = self.mask_paths[-num_test:]
+        
+        assert len(test_img_paths) == len(test_mask_paths), "Mismatch len test_paths"
+        assert check_paths_synch(test_img_paths, test_mask_paths), "Mismatch test checkpaths"
+        # Instantiate data generators for each split
+        
+        if verbose:
+            print("train ",len(train_img_paths))
+            print("test  ",len(test_img_paths))
+            print("num_samples", max_samples)
+        #assert len(train_img_paths) + len(test_img_paths) == max_samples, "Mismatch len_train+len_test vs max_samples"
+        
+        
+        val_img_paths =  test_img_paths[:max_val_samples]
+        val_mask_paths = test_mask_paths[:max_val_samples]
+        assert len(val_img_paths) == len(val_mask_paths), "Mismatch len val_paths"
+        #assert len(val_img_paths) == max_val_samples, "Mismatch len val_paths max_val_samples"
+        
+        
+        train_gen = BM_DataGen(batch_size=self.batch_size, 
+                               img_size=self.img_size, 
+                               num_channels=self.num_channels,
+                               num_slices = self.num_slices, 
+                               # data_paths
+                               img_paths =train_img_paths, 
+                               mask_paths=train_mask_paths,
+                               name="train_gen",
+                               data_augment=self.data_augment)
+        
+        test_gen  = BM_DataGen(batch_size=self.batch_size, 
+                               img_size=self.img_size, 
+                               num_channels=self.num_channels,
+                               num_slices = self.num_slices, 
+                               # data_paths
+                               img_paths =test_img_paths,   
+                               mask_paths=test_mask_paths,
+                               name="test_gen")
+        
+        
+        
+        val_gen  = BM_DataGen(batch_size=self.batch_size, 
+                               img_size=self.img_size, 
+                               num_channels=self.num_channels,
+                               num_slices = self.num_slices, 
+                               # data_paths
+                               img_paths =val_img_paths,   
+                               mask_paths=val_mask_paths,
+                               name="val_gen")
+        
+        
+        return train_gen, test_gen, val_gen
+    
+
+    def get_all_data(self, max_samples=None, verbose=False):
+    
+        if max_samples is None:
+            logging.info("Get all data loads all data")
+            max_samples = np.iinfo(np.uint32).max
+            img_paths   = self.img_paths
+            mask_paths  = self.mask_paths    
+
+        else:
+            logging.info("Get all data loads %d data")
+            img_paths   = self.img_paths [:max_samples]
+            mask_paths  = self.mask_paths[:max_samples]    
+        
+        if len(img_paths) != len(mask_paths):
+            raise ValueError("Size mismatch img & mask files ")
+        
+        logging.info("Get all data loads %d data "%len(img_paths))
+
+        all_gen = BM_DataGen(batch_size=1, 
+                             #------------
+                             img_size=self.img_size, 
+                             num_channels=self.num_channels,
+                             num_slices = self.num_slices, 
+                             # data_paths
+                             img_paths =img_paths, 
+                             mask_paths=mask_paths,
+                             name="all_gen")
+        
+        print("get_all_data has loaded %d items "%len(all_gen))
+        
+        return all_gen
+
+
+
+
+
+'''
+-------------------------------------------------------------
+''' 
+if __name__ == '__main__':    
+
+    import random
+    from random import sample
+    
+    seed = random.seed(time.time())
+    print("Seed ", seed)
+    print("program stopped here")
+    
+    validation_split=0.2
+    data = np.asarray([1, 1, 1, 4, 5, 6, 7, 8, 9, 10])
+    data=np.asarray(np.arange(0,10,1), dtype=np.uint16)
+    data = list(data)
+    num_arr = len(data) #length of data 
+    anz = int((1-validation_split)*num_arr)
+    
+    # Get indices of data
+    #Returns a new list containing elements f
+    
+    #indices = list(sample(data, anz))
+    indices = np.random.choice(num_arr, anz, replace=False)
+    #indices = np.asarray(indices)
+    print(indices)
+    indices = indices.tolist()
+    print("indices", len(indices))
+    train_data = [data[i] for i in indices]
+    test_data = np.delete(data,indices)
+    
+    print("test train", train_data, test_data)
+    print("Program terminated")  
+
+   
