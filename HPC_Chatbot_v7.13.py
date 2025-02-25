@@ -56,7 +56,19 @@ class Pipeline:
 
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        import os
+
+        file_location = 'sample_file.txt'
         
+        content = "This is a sample file to check the default location.\nHere we can test if the location is accessible."
+        
+        try:
+            with open(file_location, 'w') as f:
+                f.write(content)
+            print(f"Sample file created at: {file_location}")
+        except Exception as e:
+            print(f"An error occurred while creating the sample file: {e}")
+
         database=FAISS.load_local(
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
@@ -77,5 +89,5 @@ class Pipeline:
         retriever=database.as_retriever()
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
         # response = retrieval_chain.invoke({"input":user_message})
-        response = llm.invoke(result[0].page_content)
+        response = llm.invoke(user_input)
         return response.content
