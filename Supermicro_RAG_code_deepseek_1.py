@@ -15,8 +15,18 @@ class Pipeline:
                 "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
             }
         )
-
+        self.llm = None
     async def on_startup(self):
+        os.environ["GROQ_API_KEY"] = "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"
+        global llm
+        
+        self.llm = ChatGroq(
+            model="llama3-70b-8192",
+            temperature=0.7,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2,
+        )
         pass
         
         
@@ -32,16 +42,7 @@ class Pipeline:
 
         print(messages)
         print(user_message)
-        os.environ["GROQ_API_KEY"] = "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"
         
-
-        llm = ChatGroq(
-            model="llama3-70b-8192",
-            temperature=0.7,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2,
-        )
-        response = llm.invoke(user_message)
+        response = self.llm.invoke(user_message)
         
         return response.content
