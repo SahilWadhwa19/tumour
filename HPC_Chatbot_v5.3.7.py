@@ -56,7 +56,8 @@ class Pipeline:
         </context>
         Question: {input}""")
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
-
+        self.retriever=self.database.as_retriever()
+        self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
         pass
         
         
