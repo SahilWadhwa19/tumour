@@ -1,6 +1,5 @@
 import os
 from typing import List, Union, Generator, Iterator
-from langchain_ollama import ChatOllama
 from pydantic import BaseModel
 
 class Pipeline:
@@ -9,11 +8,7 @@ class Pipeline:
         MODEL_NAME: str
 
     def __init__(self):
-        self.valves = self.Valves(
-            **{
-                "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
-            }
-        )
+        pass
 
     async def on_startup(self):
         pass
