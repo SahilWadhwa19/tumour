@@ -6,15 +6,14 @@ from langchain_ollama import ChatOllama
 class Pipeline:
 
     class Valves(BaseModel):
-        Pass
-        
+        MODEL_NAME: str
+
     def __init__(self):
         pass
 
     async def on_startup(self):
-        from langchain_ollama import ChatOllama
         pass
-        
+
     async def on_shutdown(self):
         # This function is called when the server is stopped.
         pass
@@ -27,7 +26,6 @@ class Pipeline:
 
         print(messages)
         print(user_message)
-        
         
         
         return user_message
