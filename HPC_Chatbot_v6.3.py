@@ -76,4 +76,4 @@ class Pipeline:
         response = self.llm(user_message)
         # response = self.retrieval_chain.invoke({"input":user_message})
         
-        return response["answer"]
+        return response.content
