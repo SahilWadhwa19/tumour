@@ -52,7 +52,6 @@ class Pipeline:
         {context}
         </context>
         Question: {input}""")
-        """
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
 
         pass
