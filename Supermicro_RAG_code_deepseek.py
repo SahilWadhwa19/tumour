@@ -2,6 +2,7 @@ import os
 from typing import List, Union, Generator, Iterator
 from pydantic import BaseModel
 from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 
 class Pipeline:
     
@@ -32,7 +33,7 @@ class Pipeline:
         print(messages)
         print(user_message)
         os.environ["GROQ_API_KEY"] = "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"
-        from langchain_groq import ChatGroq
+        
 
         llm = ChatGroq(
             model="llama3-70b-8192",
