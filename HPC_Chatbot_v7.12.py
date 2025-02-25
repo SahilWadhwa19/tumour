@@ -70,9 +70,12 @@ class Pipeline:
         {context}
         </context>
         Question: {input}""")
+        query="Supermicro vs other companies"
+        result=database.similarity_search(query)
+        result[0].page_content
         document_chain=create_stuff_documents_chain(llm,prompt)
         retriever=database.as_retriever()
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
         # response = retrieval_chain.invoke({"input":user_message})
-        response = llm.invoke(user_message)
+        response = llm.invoke(result[0].page_content)
         return response.content
