@@ -21,7 +21,7 @@ class Pipeline:
         os.environ["GROQ_API_KEY"] = "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"
         global llm
         self.llm = ChatGroq(
-            model=self.valves.MODEL_NAME,
+            model="llama3-70b-8192",
             temperature=0.7,
             max_tokens=None,
             timeout=None,
