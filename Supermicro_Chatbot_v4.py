@@ -52,5 +52,16 @@ class Pipeline:
         
         response = llm.invoke(user_message)
         cwd = os.getcwd()
+        file_location = '/app/faiss_index_latest_db_6/sample_file.txt'
+
+        # Create a sample file with some default content
+        content = "This is a sample file to check the default location.\nHere we can test if the location is accessible."
         
+        # Write the content to the file
+        try:
+            with open(file_location, 'w') as f:
+                f.write(content)
+            print(f"Sample file created at: {file_location}")
+        except Exception as e:
+            print(f"An error occurred while creating the sample file: {e}")
         return cwd
