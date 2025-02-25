@@ -74,6 +74,6 @@ class Pipeline:
         print(messages)
         print(user_message)
         
-        response = self.retrieval_chain.invoke(user_message)
+        response = self.retrieval_chain.invoke({"input":user_message})
         
         return response["answer"]
