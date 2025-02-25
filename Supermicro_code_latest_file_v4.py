@@ -31,6 +31,6 @@ class Pipeline:
         print(messages)
         print(user_message)
         
-        response = self.llm.invoke("What is great in AI field in a nice comprehensive style")
+        
         
         return response.content
