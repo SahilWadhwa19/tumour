@@ -43,4 +43,4 @@ class Pipeline:
         )
         response = llm.invoke(user_message)
         
-        return response.content
+        return response
