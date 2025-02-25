@@ -14,6 +14,7 @@ class Pipeline:
         
     def __init__(self):
         self.llm = None
+        self.database = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -22,7 +23,7 @@ class Pipeline:
         
     async def on_startup(self):
         os.environ["GROQ_API_KEY"] = "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"
-        global llm
+        global llm, database
         self.llm = ChatGroq(
             model=self.valves.MODEL_NAME,
             temperature=0.7,
@@ -30,7 +31,9 @@ class Pipeline:
             timeout=None,
             max_retries=2,
         )
-        
+        os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        self.database=FAISS.from_documents(docs, GoogleGenerativeAIEmbeddings(model = "models/embedding-001"))
         pass
         
         
