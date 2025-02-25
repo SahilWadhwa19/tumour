@@ -9,7 +9,6 @@ class Pipeline:
         MODEL_NAME: str
         
     def __init__(self):
-        self.llm = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
@@ -17,12 +16,7 @@ class Pipeline:
         )
 
     async def on_startup(self):
-        global llm
-        self.llm = ChatOllama(
-            model=self.valves.MODEL_NAME,
-            temperature=0.7,  # Make sure to add a comma here
-            base_url= "http://172.28.6.4:11434",
-        )
+        pass
         
         
     async def on_shutdown(self):
