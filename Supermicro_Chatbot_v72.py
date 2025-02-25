@@ -78,4 +78,4 @@ class Pipeline:
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
         # response = retrieval_chain.invoke({"input":user_message})
         response = llm.invoke(user_message)
-        return "Found some great news then"
+        return response.content
