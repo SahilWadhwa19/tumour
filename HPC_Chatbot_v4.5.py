@@ -42,6 +42,7 @@ class Pipeline:
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
         """
+        from langchain_core.prompts import ChatPromptTemplate
         
         self.prompt = ChatPromptTemplate.from_template("""
         You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
