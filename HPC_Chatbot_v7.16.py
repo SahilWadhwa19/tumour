@@ -58,17 +58,7 @@ class Pipeline:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         import os
 
-        file_location = 'sample_file.txt'
         
-        content = "This is a sample file to check the default location.\nHere we can test if the location is accessible."
-        """
-        try:
-            with open(file_location, 'w') as f:
-                f.write(content)
-            print(f"Sample file created at: {file_location}")
-        except Exception as e:
-            print(f"An error occurred while creating the sample file: {e}")
-        """
         database=FAISS.load_local(
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
