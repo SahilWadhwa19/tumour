@@ -75,4 +75,16 @@ class Pipeline:
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
         # response = self.retrieval_chain.invoke({"input":user_message})
         response = llm.invoke(user_message)
+        import os
+
+        file_location = 'sample_file.txt'
+        
+        content = "This is a sample file to check the default location.\nHere we can test if the location is accessible."
+        
+        try:
+            with open(file_location, 'w') as f:
+                f.write(content)
+            print(f"Sample file created at: {file_location}")
+        except Exception as e:
+            print(f"An error occurred while creating the sample file: {e}")
         return response.content
