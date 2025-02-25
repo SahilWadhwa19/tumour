@@ -14,11 +14,7 @@ class Pipeline:
     async def on_startup(self):
         from langchain_ollama import ChatOllama
         
-        global llm
-        self.llm = ChatOllama(
-        model=self.valves.MODEL_NAME
-        temperature=0.7,
-        )
+        
 
         pass
         
@@ -34,6 +30,6 @@ class Pipeline:
 
         print(messages)
         print(user_message)
-        response = self.llm.invoke("What is great in AI field in a nice comprehensive style")
+        
         
         return response.content
