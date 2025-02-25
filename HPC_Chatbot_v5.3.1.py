@@ -35,7 +35,14 @@ class Pipeline:
             timeout=None,
             max_retries=2,
         )
+
+        os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         
+        self.database=FAISS.load_local(
+        "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
+        )
+
         pass
         
         
