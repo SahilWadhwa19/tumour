@@ -51,6 +51,6 @@ class Pipeline:
 
         
         response = llm.invoke(user_message)
+        cwd = os.getcwd()
         
-        
-        return response.content
+        return cwd
