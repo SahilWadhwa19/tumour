@@ -2,20 +2,13 @@ from langchain_ollama import ChatOllama
 class Pipeline:
 
     class Valves(BaseModel):
-        MODEL_NAME: str
+        Pass
         
     def __init__(self):
-        self.valves = self.Valves(
-            **{
-                "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
-            }
-        )
+        pass
 
     async def on_startup(self):
         from langchain_ollama import ChatOllama
-        
-        
-
         pass
         
     async def on_shutdown(self):
