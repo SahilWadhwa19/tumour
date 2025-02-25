@@ -9,7 +9,11 @@ class Pipeline:
         MODEL_NAME: str
 
     def __init__(self):
-        pass
+        self.valves = self.Valves(
+            **{
+                "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
+            }
+        )
 
     async def on_startup(self):
         pass
