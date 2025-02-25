@@ -3,6 +3,9 @@ from typing import List, Union, Generator, Iterator
 from pydantic import BaseModel
 from langchain_ollama import ChatOllama
 from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_community.vectorstores import FAISS
 
 class Pipeline:
     
