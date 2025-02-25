@@ -33,4 +33,4 @@ class Pipeline:
         
         
         
-        return response.content
+        return user_message
