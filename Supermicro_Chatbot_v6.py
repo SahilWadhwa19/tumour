@@ -70,6 +70,6 @@ class Pipeline:
         document_chain=create_stuff_documents_chain(llm,prompt)
         retriever=database.as_retriever()
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
-        # response = self.retrieval_chain.invoke({"input":user_message})
-        response = llm.invoke(user_message)
+        response = self.retrieval_chain.invoke({"input":user_message})
+        # response = llm.invoke(user_message)
         return response.content
