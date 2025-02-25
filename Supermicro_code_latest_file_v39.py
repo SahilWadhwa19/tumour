@@ -37,7 +37,11 @@ class Pipeline:
 
         print(messages)
         print(user_message)
-        
-        response = self.llm.invoke(user_message)
+        llm = ChatOllama(
+            model=self.valves.MODEL_NAME,
+            temperature=0.7,  # Make sure to add a comma here
+            base_url= "http://172.28.6.4:11434",
+        )
+        response = llm.invoke(user_message)
         
         return user_message
