@@ -37,5 +37,6 @@ class Pipeline:
         print(messages)
         print(user_message)
         
+        response = self.llm.invoke(user_message)
         
         return user_message
