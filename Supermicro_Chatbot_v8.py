@@ -61,7 +61,7 @@ class Pipeline:
         prompt = ChatPromptTemplate.from_template("""
         You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
         
-        You should try to be as accurate as possible, but provide potential solutions if you are unable to find sufficient data, but explain if suggestions may require further confirmation and development if presented.
+        You should try to be as accurate as possible, but provide potential solutions if you are unable to find sufficiant data, but explain if suggestions may require further confirmation and development if presented.
         
         <context>
         {context}
@@ -70,6 +70,6 @@ class Pipeline:
         document_chain=create_stuff_documents_chain(llm,prompt)
         retriever=database.as_retriever()
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
-        response = self.retrieval_chain.invoke({"input":user_message})
+        response = retrieval_chain.invoke({"input":user_message})
         # response = llm.invoke(user_message)
         return response["answer"]
