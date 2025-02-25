@@ -16,11 +16,7 @@ class Pipeline:
         )
 
     async def on_startup(self):
-        # Initialize ChatOllama model with the given parameters
-        self.llm = ChatOllama(
-            model=self.valves.MODEL_NAME,
-            temperature=0.7,  # Make sure to add a comma here
-        )
+        pass
 
     async def on_shutdown(self):
         # This function is called when the server is stopped.
@@ -35,7 +31,5 @@ class Pipeline:
         print(messages)
         print(user_message)
         
-        # Use self.llm.invoke() if this method works as expected for the library
-        response = self.llm.invoke("What is great in AI field in a nice comprehensive style")
         
-        return response.content
+        return user_message
