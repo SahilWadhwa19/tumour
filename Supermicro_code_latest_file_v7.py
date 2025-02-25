@@ -1,4 +1,8 @@
+import os
+from typing import List, Union, Generator, Iterator
+from pydantic import BaseModel
 from langchain_ollama import ChatOllama
+
 class Pipeline:
 
     class Valves(BaseModel):
