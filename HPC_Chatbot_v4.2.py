@@ -5,7 +5,7 @@ from langchain_ollama import ChatOllama
 from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_community.vectorstores import FAISS
+# from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 class Pipeline:
     
@@ -37,9 +37,12 @@ class Pipeline:
         )
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        """
         self.database=FAISS.load_local(
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
+        """
+        
         self.prompt = ChatPromptTemplate.from_template("""
         You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
         
