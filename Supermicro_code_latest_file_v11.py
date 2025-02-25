@@ -4,10 +4,10 @@ from pydantic import BaseModel
 from langchain_ollama import ChatOllama
 
 class Pipeline:
-
+    
     class Valves(BaseModel):
         MODEL_NAME: str
-
+        
     def __init__(self):
         self.llm = None
         self.valves = self.Valves(
@@ -18,8 +18,12 @@ class Pipeline:
 
     async def on_startup(self):
         global llm
+        self.llm = ChatOllama(
+            model=self.valves.MODEL_NAME,
+            temperature=0.7,  # Make sure to add a comma here
+        )
         
-
+        
     async def on_shutdown(self):
         # This function is called when the server is stopped.
         pass
