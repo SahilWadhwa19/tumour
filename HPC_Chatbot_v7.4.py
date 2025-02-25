@@ -47,7 +47,7 @@ class Pipeline:
         print(user_message)
         os.environ["GROQ_API_KEY"] = "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"
         llm = ChatGroq(
-            model=llama3-70b-8192,
+            model=self.valves.MODEL_NAME,
             temperature=0.7,
             max_tokens=None,
             timeout=None,
@@ -73,6 +73,6 @@ class Pipeline:
         document_chain=create_stuff_documents_chain(llm,prompt)
         retriever=database.as_retriever()
         retrieval_chain=create_retrieval_chain(retriever,document_chain)
-        response = self.retrieval_chain.invoke({"input":user_message})
+        response = retrieval_chain.invoke({"input":user_message})
         # response = llm.invoke(user_message)
         return response["answer"]
