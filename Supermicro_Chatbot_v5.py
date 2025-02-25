@@ -54,14 +54,25 @@ class Pipeline:
         cwd = os.getcwd()
         file_location = '/app/faiss_index_latest_db_6/sample_file.txt'
 
-        # Create a sample file with some default content
-        content = "This is a sample file to check the default location.\nHere we can test if the location is accessible."
+        os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         
-        # Write the content to the file
-        try:
-            with open(file_location, 'w') as f:
-                f.write(content)
-            print(f"Sample file created at: {file_location}")
-        except Exception as e:
-            print(f"An error occurred while creating the sample file: {e}")
-        return cwd
+        database=FAISS.load_local(
+        "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
+        )
+
+        prompt = ChatPromptTemplate.from_template("""
+        You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
+        
+        You should try to be as accurate as possible, but provide potential solutions if you are unable to find sufficient data, but explain if suggestions may require further confirmation and development if presented.
+        
+        <context>
+        {context}
+        </context>
+        Question: {input}""")
+        document_chain=create_stuff_documents_chain(llm,prompt)
+        retriever=database.as_retriever()
+        retrieval_chain=create_retrieval_chain(retriever,document_chain)
+        # response = self.retrieval_chain.invoke({"input":user_message})
+        response = llm.invoke(user_message)
+        return response.content
