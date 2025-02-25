@@ -50,10 +50,7 @@ class Pipeline:
         )
 
         
-        response = llm.invoke(user_message)
-        cwd = os.getcwd()
-        file_location = '/app/faiss_index_latest_db_6/sample_file.txt'
-
+        
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         
