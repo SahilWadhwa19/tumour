@@ -13,7 +13,7 @@ class Pipeline:
         self.llm = None
         self.valves = self.Valves(
             **{
-                "MODEL_NAME": os.getenv("MODEL_NAME", "deepseek-r1:8b"),
+                "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
             }
         )
         
