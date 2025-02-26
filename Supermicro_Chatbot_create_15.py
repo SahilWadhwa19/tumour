@@ -26,6 +26,7 @@ class Pipeline:
         )
         
     async def on_startup(self):
+        import os
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.sample_data = "All will be great"
@@ -49,4 +50,4 @@ class Pipeline:
         
         # Print the current working directory
         print("Current working directory:", cwd)
-        return type(self.embeddings)
+        return str(type(self.embeddings))
