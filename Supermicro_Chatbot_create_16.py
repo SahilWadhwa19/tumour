@@ -19,6 +19,7 @@ class Pipeline:
         self.llm = None
         self.embeddings = None
         self.sample_data = None
+        self.database = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -29,6 +30,9 @@ class Pipeline:
         import os
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        self.database=FAISS.load_local(
+        "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
+        )
         self.sample_data = "All will be great"
         pass
         
@@ -50,4 +54,4 @@ class Pipeline:
         
         # Print the current working directory
         print("Current working directory:", cwd)
-        return str(type(self.embeddings))
+        return str(type(self.database))
