@@ -79,4 +79,4 @@ class Pipeline:
         # response = self.llm.invoke(user_message)
         # Print the current working directory
         print("Current working directory:", cwd)
-        return str(type(self.document_chain))
+        return str(type(self.retriever))
