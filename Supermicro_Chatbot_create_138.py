@@ -25,7 +25,7 @@ class Pipeline:
         self.retriever = None
         self.retrieval_chain = None
         self.response = None
-        self.input = None
+        # self.input = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -55,12 +55,12 @@ class Pipeline:
         <context>
         {context}
         </context>
-        Question: {self.input}""")
+        Question: Describe yourself as you role""")
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
         self.retriever=self.database.as_retriever()
         
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
-        self.response = self.retrieval_chain.invoke({"self.input":"Describe yourself as you role"})
+        self.response = self.retrieval_chain.invoke()
         self.sample_data = "All will be great"
         # self.response = self.database.index.ntotal
         pass
