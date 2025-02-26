@@ -55,7 +55,8 @@ class Pipeline:
         <context>
         {context}
         </context>
-        Question: Describe yourself as you role""")
+        Question: "Describe yourself as you role"
+        """)
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
         self.retriever=self.database.as_retriever()
         
