@@ -24,7 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
-        self.response = None
+        # self.response = None
         # self.input = None
         self.valves = self.Valves(
             **{
@@ -59,7 +59,7 @@ class Pipeline:
         """)
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
         self.retriever=self.database.as_retriever()
-        self.response = self.database.similarity_search("Great features")[0].page_content
+        
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
         # self.response = self.retrieval_chain.invoke()
         # self.sample_data = "All will be great"
@@ -81,10 +81,11 @@ class Pipeline:
         print(user_message)
         
         cwd = os.getcwd()
+        
         # response = self.retrieval_chain.invoke({"input":user_message})
         # response = self.llm.invoke(user_message)
         # Print the current working directory
         # response = self.database.similarity_search("Something great")
-        
+        response = self.database.similarity_search("Great features")[0].page_content
         print("Current working directory:", cwd)
-        return str(self.response)
+        return str(response)
