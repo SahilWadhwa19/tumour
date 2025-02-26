@@ -24,7 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
-        # self.response = None
+        self.response = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -43,7 +43,7 @@ class Pipeline:
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.database=FAISS.load_local(
-        "/app/faiss_index_latest_db_6", self.embeddings, allow_dangerous_deserialization=True
+        "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
         
         self.prompt = ChatPromptTemplate.from_template("""
@@ -59,7 +59,7 @@ class Pipeline:
         self.retriever=self.database.as_retriever()
         
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
-        # self.response = self.retrieval_chain.invoke({"input":"Describe yourself as you role"})
+        self.response = self.retrieval_chain.invoke({"input":"Describe yourself as you role"})
         self.sample_data = "All will be great"
         # self.response = self.database.index.ntotal
         pass
@@ -79,10 +79,10 @@ class Pipeline:
         print(user_message)
         
         cwd = os.getcwd()
-        response = self.retrieval_chain.invoke({"input":user_message})
+        # response = self.retrieval_chain.invoke({"input":user_message})
         # response = self.llm.invoke(user_message)
         # Print the current working directory
         # response = self.database.similarity_search("Something great")
         
         print("Current working directory:", cwd)
-        return str(response)
+        return str(self.response)
