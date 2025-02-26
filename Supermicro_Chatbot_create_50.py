@@ -54,9 +54,9 @@ class Pipeline:
         {context}
         </context>
         Question: {input}""")
-        self.document_chain=create_stuff_documents_chain(llm,prompt)
-        self.retriever=database.as_retriever()
-        self.retrieval_chain=create_retrieval_chain(retriever,document_chain)
+        self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
+        self.retriever=self.database.as_retriever()
+        self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
         self.sample_data = "All will be great"
         pass
         
@@ -75,8 +75,8 @@ class Pipeline:
         print(user_message)
         
         cwd = os.getcwd()
-        # response = self.retrieval_chain.invoke({"input":user_message})
-        response = self.llm.invoke(user_message)
+        response = self.retrieval_chain.invoke({"input":user_message})
+        # response = self.llm.invoke(user_message)
         # Print the current working directory
         print("Current working directory:", cwd)
-        return response.content
+        return str(response["answer"]
