@@ -27,7 +27,7 @@ class Pipeline:
         
     async def on_startup(self):
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.sample_data = "All will be great"
         pass
         
