@@ -24,7 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
-        # self.response = None
+        self.response = None
         # self.input = None
         self.valves = self.Valves(
             **{
