@@ -31,11 +31,19 @@ class Pipeline:
         
     async def on_startup(self):
         import os
+        self.llm = ChatGroq(
+            model=self.valves.MODEL_NAME,
+            temperature=0.7,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2,
+        )
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.database=FAISS.load_local(
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
+        
         self.prompt = ChatPromptTemplate.from_template("""
         You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
         
@@ -47,6 +55,7 @@ class Pipeline:
         Question: {input}""")
         self.document_chain=create_stuff_documents_chain(llm,prompt)
         retriever=database.as_retriever()
+        
         self.sample_data = "All will be great"
         pass
         
