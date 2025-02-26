@@ -17,6 +17,7 @@ class Pipeline:
         
     def __init__(self):
         self.llm = None
+        self.embeddings = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -24,7 +25,8 @@ class Pipeline:
         )
         
     async def on_startup(self):
-        
+        os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         pass
         
         
