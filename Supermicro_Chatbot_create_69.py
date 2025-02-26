@@ -24,6 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
+        self.response = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -57,6 +58,7 @@ class Pipeline:
         self.document_chain=create_stuff_documents_chain(self.llm,self.prompt)
         self.retriever=self.database.as_retriever()
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
+        self.response = self.retrieval_chain.invoke({"input":"Describe yourself as you role"})
         self.sample_data = "All will be great"
         pass
         
@@ -79,4 +81,4 @@ class Pipeline:
         # response = self.llm.invoke(user_message)
         # Print the current working directory
         print("Current working directory:", cwd)
-        return str(type(self.retrieval_chain))
+        return str(self.response)
