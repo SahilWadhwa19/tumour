@@ -23,6 +23,7 @@ class Pipeline:
         self.prompt = None
         self.document_chain = None
         self.retriever = None
+        self.retrieval_chain = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -55,7 +56,7 @@ class Pipeline:
         Question: {input}""")
         self.document_chain=create_stuff_documents_chain(llm,prompt)
         self.retriever=database.as_retriever()
-        
+        self.retrieval_chain=create_retrieval_chain(retriever,document_chain)
         self.sample_data = "All will be great"
         pass
         
