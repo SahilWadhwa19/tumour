@@ -49,4 +49,4 @@ class Pipeline:
         
         # Print the current working directory
         print("Current working directory:", cwd)
-        return self.sample_data
+        return type(self.embeddings)
