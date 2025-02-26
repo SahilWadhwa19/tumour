@@ -17,12 +17,6 @@ class Pipeline:
         
     def __init__(self):
         self.llm = None
-        self.prompt = None
-        self.database = None
-        self.chain = None
-        self.embeddings = None
-        self.retriever = None
-        self.retriever_chain = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
