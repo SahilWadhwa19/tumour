@@ -76,7 +76,7 @@ class Pipeline:
         
         cwd = os.getcwd()
         # response = self.retrieval_chain.invoke({"input":user_message})
-        # response = llm.invoke(user_message)
+        response = self.llm.invoke(user_message)
         # Print the current working directory
         print("Current working directory:", cwd)
-        return cwd
+        return response.content
