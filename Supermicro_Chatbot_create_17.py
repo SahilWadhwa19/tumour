@@ -20,6 +20,9 @@ class Pipeline:
         self.embeddings = None
         self.sample_data = None
         self.database = None
+        self.prompt = None
+        self.document_chain = None
+        self.retriever = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -33,6 +36,17 @@ class Pipeline:
         self.database=FAISS.load_local(
         "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
         )
+        self.prompt = ChatPromptTemplate.from_template("""
+        You are an experienced HPC and Datacenter Solutions Presales Engineer. You provide insights and assistance to other engineers and sales persons to enable them to find appropriate products and solutions from our portfolio of products and roadmaps provided in the augmented data set. 
+        
+        You should try to be as accurate as possible, but provide potential solutions if you are unable to find sufficiant data, but explain if suggestions may require further confirmation and development if presented.
+        
+        <context>
+        {context}
+        </context>
+        Question: {input}""")
+        self.document_chain=create_stuff_documents_chain(llm,prompt)
+        retriever=database.as_retriever()
         self.sample_data = "All will be great"
         pass
         
@@ -54,4 +68,4 @@ class Pipeline:
         
         # Print the current working directory
         print("Current working directory:", cwd)
-        return str(type(self.database))
+        return str(type(self.retriever))
