@@ -40,11 +40,7 @@ class Pipeline:
 
         print(messages)
         print(user_message)
-        os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        import os
-
-        # Get the current working directory
+        
         cwd = os.getcwd()
         
         # Print the current working directory
