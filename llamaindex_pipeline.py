@@ -23,9 +23,16 @@ class Pipeline:
         # Set the OpenAI API key
         os.environ["OPENAI_API_KEY"] = "your-api-key-here"
 
-        from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
-
-        self.documents = SimpleDirectoryReader("./data").load_data()
+        from llama_index.core import Settings, VectorStoreIndex, SimpleDirectoryReader
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+        from langchain_groq import ChatGroq
+        os.environ["GROQ_API_KEY"] = "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"
+        Settings.llm = ChatGroq(model="llama3-70b-8192")
+        Settings.embed_model = HuggingFaceEmbedding(
+            model_name="BAAI/bge-small-en-v1.5",
+            embed_batch_size=2,
+            )
+        self.documents = SimpleDirectoryReader("/app/data").load_data()
         self.index = VectorStoreIndex.from_documents(self.documents)
         # This function is called when the server is started.
         pass
