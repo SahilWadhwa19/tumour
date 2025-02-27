@@ -24,7 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
-        self.response = None
+        # self.response = None
         # self.input = None
         self.valves = self.Valves(
             **{
@@ -44,7 +44,7 @@ class Pipeline:
         os.environ["GOOGLE_API_KEY"]="AIzaSyDf5jdwzdhEpjip3aEB0sywg9htgYy3RUA"
         self.embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         self.database=FAISS.load_local(
-        "/app/faiss_index_latest_db_6", GoogleGenerativeAIEmbeddings(model="models/embedding-001"), allow_dangerous_deserialization=True
+        "/app/faiss_index_latest_db_6", self.embeddings, allow_dangerous_deserialization=True
         )
         
         self.prompt = ChatPromptTemplate.from_template("""
