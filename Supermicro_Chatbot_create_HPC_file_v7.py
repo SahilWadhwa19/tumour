@@ -91,4 +91,4 @@ class Pipeline:
         # response = self.database.similarity_search("Something great")
         # response = self.database.similarity_search("Great features")[0].page_content
         print("Current working directory:", cwd)
-        return str(self.response)
+        return cwd
