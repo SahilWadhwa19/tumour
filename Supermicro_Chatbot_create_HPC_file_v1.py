@@ -86,6 +86,6 @@ class Pipeline:
         # response = self.llm.invoke(user_message)
         # Print the current working directory
         # response = self.database.similarity_search("Something great")
-        response = self.database.similarity_search("Great features")[0].page_content
+        # response = self.database.similarity_search("Great features")[0].page_content
         print("Current working directory:", cwd)
-        return str(response)
+        return cwd
