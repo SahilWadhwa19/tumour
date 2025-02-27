@@ -25,7 +25,7 @@ class Pipeline:
         self.retriever = None
         self.retrieval_chain = None
         self.response = None
-        # self.input = None
+        self.output = None
         self.valves = self.Valves(
             **{
                 "MODEL_NAME": os.getenv("MODEL_NAME", "llama3-70b-8192"),
@@ -64,7 +64,8 @@ class Pipeline:
         # self.response = self.retrieval_chain.invoke()
         # self.sample_data = "All will be great"
         # self.response = self.database.index.ntotal
-        self.response = self.database.similarity_search("Great features")[0].page_content
+        self.output = self.database.similarity_search("Great features")
+        self.response = self.output[0].page_content
         pass
         
         
