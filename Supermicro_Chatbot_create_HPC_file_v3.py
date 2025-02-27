@@ -63,7 +63,8 @@ class Pipeline:
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
         # self.response = self.retrieval_chain.invoke()
         # self.sample_data = "All will be great"
-        self.response = self.database.index.ntotal
+        # self.response = self.database.index.ntotal
+        self.response = self.database.similarity_search("Great features")[0].page_content
         pass
         
         
