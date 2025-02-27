@@ -24,7 +24,7 @@ class Pipeline:
         self.document_chain = None
         self.retriever = None
         self.retrieval_chain = None
-        # self.response = None
+        self.response = None
         # self.input = None
         self.valves = self.Valves(
             **{
@@ -63,7 +63,7 @@ class Pipeline:
         self.retrieval_chain=create_retrieval_chain(self.retriever,self.document_chain)
         # self.response = self.retrieval_chain.invoke()
         # self.sample_data = "All will be great"
-        # self.response = self.database.index.ntotal
+        self.response = self.database.index.ntotal
         pass
         
         
@@ -88,4 +88,4 @@ class Pipeline:
         # response = self.database.similarity_search("Something great")
         # response = self.database.similarity_search("Great features")[0].page_content
         print("Current working directory:", cwd)
-        return cwd
+        return str(self.response)
